@@ -8,8 +8,7 @@ import nodemailer from "nodemailer";
 export const checkout = async (req, res) => {
   try {
     const options = {
-      // amount: Number(req.body.price) * 100,
-      amount: Number(3000) * 100,
+      amount: Number(3000) * 100, // ₹3000 in paise
       currency: "INR",
       receipt: `RECEIPT_ID_${nanoid()}`,
     };
@@ -26,6 +25,112 @@ export const checkout = async (req, res) => {
       success: false,
       error: "Internal Server Error",
     });
+  }
+};
+
+// New appointment booking endpoint
+export const bookAppointment = async (req, res) => {
+  try {
+    const { firstName, lastName, email, mobileNumber, address, date, time, preferredSlot, modeOfConsultation, expertName, expertEmail } = req.body;
+
+    const transporter = nodemailer.createTransporter({
+      service: "gmail",
+      auth: {
+        user: process.env.VITE_APP_USER_EMAIL_TO_SEND_EMAIL,
+        pass: process.env.VITE_APP_GOOGLE_APP_PASSWORD,
+      },
+    });
+
+    // Send email to selected expert with CC to admin
+    const mailOptions = {
+      from: process.env.VITE_APP_USER_EMAIL_TO_SEND_EMAIL,
+      to: expertEmail,
+      cc: "bhavikasmart15@gmail.com",
+      subject: `New Appointment Booking - ${firstName} ${lastName}`,
+      html: `
+        <h2>New Appointment Booking</h2>
+        <p><b>Name:</b> ${firstName} ${lastName}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Phone:</b> ${mobileNumber}</p>
+        <p><b>Address:</b> ${address}</p>
+        <p><b>Date:</b> ${date}</p>
+        <p><b>Time:</b> ${time}</p>
+        <p><b>Preferred Slot:</b> ${preferredSlot}</p>
+        <p><b>Mode:</b> ${modeOfConsultation}</p>
+        <p><b>Expert:</b> ${expertName}</p>
+        <p><i>Payment pending - customer will proceed to payment gateway.</i></p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "Appointment request sent to expert" });
+  } catch (error) {
+    console.error("Error booking appointment:", error);
+    res.status(500).json({ success: false, error: "Failed to send appointment request" });
+  }
+};
+
+// Payment success handler
+export const paymentSuccess = async (req, res) => {
+  try {
+    const { firstName, lastName, email, mobileNumber, address, date, time, preferredSlot, modeOfConsultation, expertName, expertEmail, razorpay_payment_id, razorpay_order_id, payment_amount } = req.body;
+
+    // Save appointment to database
+    const appointment = new Appointment({
+      firstName,
+      lastName,
+      email,
+      mobileNumber,
+      address,
+      date,
+      time,
+      preferredSlot,
+      modeOfConsultation,
+      expertName,
+      expertEmail,
+      razorpay_order_id,
+      razorpay_payment_id,
+      status: "confirmed",
+      currentDate: new Date(),
+    });
+    await appointment.save();
+
+    const transporter = nodemailer.createTransporter({
+      service: "gmail",
+      auth: {
+        user: "bhavikasmart15@gmail.com",
+        pass: "vtcm xkpw jsqk lyfx",
+      },
+    });
+
+    // Send confirmation email to customer with CC to admin
+    const mailOptions = {
+      from: "bhavikasmart15@gmail.com",
+      to: email,
+      cc: "bhavikasmart15@gmail.com",
+      subject: "Appointment Confirmed & Payment Received",
+      html: `
+        <h2>Appointment Confirmed</h2>
+        <p>Hi ${firstName},</p>
+        <p>Your appointment has been confirmed and payment received successfully.</p>
+        <p><b>Appointment Details:</b></p>
+        <p><b>Expert:</b> ${expertName}</p>
+        <p><b>Date:</b> ${date}</p>
+        <p><b>Time:</b> ${time}</p>
+        <p><b>Mode:</b> ${modeOfConsultation}</p>
+        <p><b>Amount Paid:</b> ${payment_amount}</p>
+        <p><b>Transaction ID:</b> ${razorpay_payment_id}</p>
+        <p><b>Order ID:</b> ${razorpay_order_id}</p>
+        <p>Thank you for your booking! The expert will contact you soon.</p>
+        <p>Regards,<br>Astro Achariya Team</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "Confirmation email sent" });
+  } catch (error) {
+    console.error("Error in payment success:", error);
+    res.status(500).json({ success: false, error: "Failed to process payment success" });
   }
 };
 
@@ -120,15 +225,13 @@ export const sendEmailToAdminWhenMakeAnAppointment = async (
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        console.error("Error sending appointment email:", error);
       } else {
-        res.status(200).json({ message: "Email sent successfully!" });
+        console.log("Appointment email sent:", info.response);
       }
     });
   } catch (error) {
-    console.error("Something went wrong while sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error in Appointment email function:", error);
   }
 };
 
@@ -338,18 +441,16 @@ export const sendEmailToAdminAfterSuccessfullPayment = async (
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error("Error sending email:", error);
+        console.error("Admin email failed:", error);
         alert(
           "There is a problem while inform to admin, But payment done successfully!"
         );
-        res.status(500).json({ error: "Internal Server Error" });
       } else {
-        res.status(200).json({ message: "Email sent successfully!" });
+        console.log("Admin email sent:", info.response);
       }
     });
   } catch (error) {
-    console.error("Something went wrong while sending email:", error);
-    res?.status(500).json({ error: "Internal Server Error" });
+    console.error("Something went wrong while sending email to admin:", error);
   }
 };
 
@@ -482,17 +583,15 @@ export const userWillgetEmailAfterSuccessfullPayment = async (
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error("Error sending email:", error);
-        res.status(500).json({ error: "Internal Server Error" });
         alert(
           "There is a problem while inform to admin, But payment done successfully!"
         );
       } else {
-        res.status(200).json({ message: "Email sent successfully!" });
+        console.log("Email sent successfully After Successfull Payment!", info.response);
       }
     });
   } catch (error) {
     console.error("Something went wrong while sending email:", error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -517,5 +616,95 @@ export const getAllPaymentsOfUser = async (req, res) => {
     return res
       .status(500)
       .json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+// New appointment email function for template_p7m1u6t
+export const sendAppointmentEmailNew = async (req, res) => {
+  try {
+    const { firstName, lastName, email, mobileNumber, address, date, time, preferredSlot, modeOfConsultation, expertName } = req.body;
+
+    const transporter = nodemailer.createTransporter({
+      service: "gmail",
+      auth: {
+        user: "bhavikasmart15@gmail.com",
+        pass: "vtcm xkpw jsqk lyfx",
+      },
+    });
+
+    const mailOptions = {
+      from: "bhavikasmart15@gmail.com",
+      to: "bhavikasmart15@gmail.com",
+      subject: `New Appointment Request - ${firstName} ${lastName}`,
+      html: `
+        <h2>NEW APPOINTMENT REQUEST</h2>
+        <p><b>Customer Details:</b></p>
+        <p>Name: ${firstName} ${lastName}</p>
+        <p>Email: ${email}</p>
+        <p>Mobile: ${mobileNumber}</p>
+        <p>Address: ${address}</p>
+        <p><b>Appointment Details:</b></p>
+        <p>Expert: ${expertName}</p>
+        <p>Date: ${date}</p>
+        <p>Time: ${time}</p>
+        <p>Preferred Slot: ${preferredSlot}</p>
+        <p>Consultation Mode: ${modeOfConsultation}</p>
+        <p><b>Status:</b> Awaiting Payment</p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "Appointment email sent successfully" });
+  } catch (error) {
+    console.error("Error sending appointment email:", error);
+    res.status(500).json({ success: false, error: "Failed to send appointment email" });
+  }
+};
+
+// Cart/Product order email - only to admin
+export const sendOrderConfirmationEmail = async (orderData) => {
+  try {
+    const {
+      customer_name,
+      customer_email,
+      customer_phone,
+      total,
+      items,
+      razorpay_payment_id,
+      order_id
+    } = orderData;
+
+    const transporter = nodemailer.createTransporter({
+      service: "gmail",
+      auth: {
+        user: "bhavikasmart15@gmail.com",
+        pass: "vtcm xkpw jsqk lyfx",
+      },
+    });
+
+    // Email only to admin for cart orders
+    const adminMailOptions = {
+      from: "bhavikasmart15@gmail.com",
+      to: "bhavikasmart15@gmail.com",
+      subject: `New Order - Payment ₹${total}`,
+      html: `
+        <h1>New Order Received</h1>
+        <p><strong>Customer:</strong> ${customer_name}</p>
+        <p><strong>Email:</strong> ${customer_email}</p>
+        <p><strong>Phone:</strong> ${customer_phone}</p>
+        <p><strong>Total Amount:</strong> ₹${total}</p>
+        <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
+        <p><strong>Order ID:</strong> ${order_id}</p>
+        <h3>Items Ordered:</h3>
+        <ul>
+          ${items.map(item => `<li>${item.name} x${item.quantity} — ₹${item.price * item.quantity}</li>`).join('')}
+        </ul>
+      `
+    };
+
+    await transporter.sendMail(adminMailOptions);
+    console.log('Order email sent to admin successfully');
+  } catch (error) {
+    console.error('Error sending order email:', error);
   }
 };

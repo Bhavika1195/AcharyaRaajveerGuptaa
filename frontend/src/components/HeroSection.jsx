@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import banner from "../images/banner.jpg";
 import mbanner from "../images/mob-banner.jpg";
 import banner1 from "../images/banner1.jpg";
+import astroLogo from "../images/logo/astro achariya logo-01.png";
 import BottomNavbar from "./BottomNavbar";
 import TopNavbar from "./TopNavbar";
 import FeaturedServices from "./FeaturedServices";
+import AstrologySlider from "./AstrologySlider";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
@@ -26,40 +28,40 @@ const HeroSection = () => {
   return (
     <>
       <div className="relative">
-        <div className="fixed w-full h-screen">
-          <img
-            src={backgroundImage}
-            alt=""
-            className="top-0 left-0 w-full h-screen object-cover"
-          />
+        <div className="fixed w-full h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black z-0">
+          <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         </div>
-        <div className="hidden md:block">
-          <TopNavbar />
-        </div>
+
         <BottomNavbar />
-        {/* <About /> */}
-        <div className=" flex justify-center items-center w-full absolute m-auto h-screen">
-          <div className="absolute text-center top-[60%] md:top-[40%] lg:top-[30%]  lg:left-32 md:left-14 p-4">
-            <h1 className="text-5xl font-philosopher text-white font-semibold">
-              Astro Achariya Debdutta
-            </h1>
-            <div className="mt-3 mb-3 ">
-              <p className="text-white">
-                <strong>Globally Acclaimed </strong>Astrologer
-              </p>
-              <p className="text-white">
-                <strong>Vastu</strong> Influencer
-              </p>
-              <p className="text-white">
-                Author, <strong>Life Coach</strong>, <strong>Success Guru</strong>
-              </p>
-             
+        <div className="flex justify-center items-start w-full absolute inset-0 z-5 pt-28">
+          <div className="text-center p-4 w-full max-w-6xl">
+            <div className="mb-3">
+              <img 
+                src={astroLogo} 
+                alt="Astro Achariya Logo" 
+                className="mx-auto mb-2 w-32 h-32 md:w-40 md:h-40 object-contain"
+              />
+              <div className="text-xl md:text-2xl text-white mb-2 font-light">
+                 Astrology • Numerology • Vastu 
+              </div>
             </div>
-            <Link to={"/appointment"}>
-              <button className="text-white bg-black hover:bg-transparent border border-black rounded-sm px-3 py-2 hover:border hover:border-black transition duration-700 ease-in-out">
-                Your Journey Begins Here
-              </button>
-            </Link>
+            
+            <div className="mb-4">
+              <AstrologySlider />
+            </div>
+            
+            <div className="flex flex-col md:flex-row gap-3 justify-center mb-12">
+              <Link to={"/products"}>
+                <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-6 py-3 rounded-full text-base font-semibold shadow-2xl transform hover:scale-105 transition-all duration-300 border border-purple-400">
+                  Explore Sacred Crystals
+                </button>
+              </Link>
+              <Link to={"/appointment"}>
+                <button className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 text-white px-6 py-3 rounded-full text-base font-semibold shadow-2xl transform hover:scale-105 transition-all duration-300 border border-yellow-400">
+                  Book Consultation
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
         {/* <About /> */}

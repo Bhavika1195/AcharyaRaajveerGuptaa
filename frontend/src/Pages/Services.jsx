@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TopNavbar from "../components/TopNavbar";
+
 import BottomNavbar from "../components/BottomNavbar";
 import Footer from "../components/Footer";
 import feature1 from "../images/alldebdatta-images/feature1.jpg";
@@ -122,13 +122,8 @@ const Services = () => {
   };
 
   return (
-    <section>
-      <div className="hidden md:block">
-        <TopNavbar />
-      </div>
-      <div className="bg-black h-[70px]">
-        <BottomNavbar className="text-black" />
-      </div>
+    <section className="pt-16">
+      <BottomNavbar />
       <div>
         <h1 className="text-center text-2xl md:text-3xl lg:text-4xl m-3 font-philosopher  mb-5">
           Services

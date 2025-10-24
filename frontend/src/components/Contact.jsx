@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RiLoader4Line } from "react-icons/ri";
-import TopNavbar from "./TopNavbar";
+
 import BottomNavbar from "./BottomNavbar";
 import Footer from "./Footer";
 import doodle from "../images/doodle.svg";
+import emailHelper from "../email";
 import { SiGooglemaps } from "react-icons/si";
 import {
   BiLogoFacebook,
@@ -21,13 +22,17 @@ import { TfiYoutube } from "react-icons/tfi";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { BsYoutube } from "react-icons/bs";
 
+// Get API URL from environment variables
+const API_URL = import.meta.env.VITE_HOST_URL_ENDPOINT || 'http://localhost:5000';
+
 const Contact = () => {
   const form = useRef();
   const [loading, setLoading] = useState(false);
 
   const initialFormValue = {
-    fullName: "",
+    name: "",
     email: "",
+    subject: "",
     message: "",
   };
 
@@ -46,19 +51,20 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      const result = await emailjs.sendForm(
-        import.meta.env.VITE_APP_EMAIL_JS_SERVICE_ID_OF_PABLO_AC,
-        import.meta.env.VITE_APP_EMAIL_JS_TEMPLATE_ID_OF_PABLO_AC,
-        form.current,
-        import.meta.env.VITE_APP_EMAIL_JS_PUBLIC_KEY_ID_OF_PABLO_AC
-      );
-      console.log("Form Data", formData)
-      console.log("Result after sending email to contact", result)
-      setFormData(initialFormValue)
-      alert("Message sent successfully!");
+      // Frontend-only: send admin + auto-reply via EmailJS helper
+      try {
+        const result = await emailHelper.sendContactEmails(formData);
+        console.log("EmailJS results:", result);
+        setFormData(initialFormValue);
+        toast.success("Message sent successfully!");
+      } catch (emailErr) {
+        console.error("Email helper error:", emailErr);
+        toast.error("Failed to send email. Please try again.");
+      }
 
     } catch (error) {
-      alert("Failed to send message. Please try again.");
+      console.error("Contact flow error:", error);
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -66,13 +72,8 @@ const Contact = () => {
 
   return (
     <>
-      <div className="hidden md:block">
-        <TopNavbar />
-      </div>
-      <div className="bg-black h-[70px]">
-        <BottomNavbar className="text-black" />
-      </div>
-      <div className=" bg-gray-100 py-6 flex flex-col sm:py-12 ">
+      <BottomNavbar />
+      <div className=" bg-gray-100 pt-20 pb-6 flex flex-col sm:pb-12 ">
         <div className="  m-auto sm:flex sm:items-center sm:justify-between w-[97%] md:w-[90%] lg:w-[70%] sm:m-auto">
           <div className="mb-[50px] border-2 md:w-[46%]">
             <div>
@@ -83,8 +84,9 @@ const Contact = () => {
                 <div className="">
                   <h3 className="text-xl font-bold">Address : </h3>
                   <p>
-                    Flat No.713, Devika Tower 6, Nehru Place, New Delhi-110019,
-                    India
+                    Mumbai - 400001, 
+                    Maharashtra, India
+                    
                   </p>
                 </div>
               </div>
@@ -151,10 +153,9 @@ const Contact = () => {
                       <input
                         type="text"
                         placeholder="Full Name*"
-                        value={formData.fullName}
+                        value={formData.name}
                         onChange={handleInputChange}
-                        name="fullName"
-                        id="from_name"
+                        name="name"
                         required
                         autoComplete="off"
                         className="peer placeholder-transparent h-10 w-full px-7 pl-2 border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
@@ -170,7 +171,6 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         placeholder=" Email Address*"
-                        id="from_email"
                         autoComplete="off"
                         required
                         className="peer placeholder-transparent h-10 w-full px-7 pl-2 border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
@@ -180,9 +180,22 @@ const Contact = () => {
                       </label>
                     </div>
                     <div className="my-3 relative">
+                      <input
+                        type="text"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                        placeholder=" Subject"
+                        autoComplete="off"
+                        className="peer placeholder-transparent h-10 w-full px-7 pl-2 border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600"
+                      />
+                      <label className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
+                        Subject
+                      </label>
+                    </div>
+                    <div className="my-3 relative">
                       <textarea
                         name="message"
-                        id="message"
                         value={formData.message}
                         onChange={handleInputChange}
                         rows=""

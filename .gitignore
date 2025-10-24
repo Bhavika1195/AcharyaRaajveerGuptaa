@@ -1,0 +1,50 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# dotenv environment files
+.env
+.env.local
+.env.*.local
+
+# Vite cache
+.vite
+
+# Output folders
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sw?
+
+# coverage reports
+coverage/
+
+# local database
+*.sqlite
+*.db
+
+# debug
+debug.log
+
+# parcel cache
+.cache/
+
+# Firebase/Netlify config (if generated)
+.firebase/
+.netlify/
+
+# Optional lock files (depends on project policy)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

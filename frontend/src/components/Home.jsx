@@ -1,15 +1,12 @@
 import React from "react";
 import HeroSection from "./HeroSection";
-import FeaturedVideoEmbed from "./FeaturedVideoEmbed";
 
-const Home = () => {
+function Home() {
   return (
-    <>
-      <div>
-        <HeroSection />
-      </div>
-    </>
+    <div>
+      <HeroSection />
+    </div>
   );
-};
+}
 
 export default Home;

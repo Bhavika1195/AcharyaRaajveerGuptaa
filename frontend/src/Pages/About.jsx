@@ -1,59 +1,36 @@
 import React from "react";
-import feature6 from "../images/alldebdatta-images/feature6.jpg";
+
 import { Link } from "react-router-dom";
 
 const About = () => {
   return (
-    <div className=" px-10 bg-white absolute w-full mt-[-400px]">
+    <div className="px-10 bg-white absolute w-full mt-[-400px]">
       <div className="mt-10 pb-10">
-        <h3 className="font-philosopher text-xl">About Me</h3>
-        <h3 className="font-dancing text-[20px] leading-9">Namaskar!</h3>
-        <div className=" flex flex-col md:flex-row justify-between">
-          <div className=" w-full md:w-[50%] px-3 sm:mb-10 text-popp">
-            <p>
-              As I extend my warm greetings, I invite you to delve into the
-              tapestry of my life's journey. My name is Achariya Debdutta, a
-              seasoned professional in the realms of astrology, vastu
-              consultancy, numerology, success coaching, and authorship. With an
-              enriching experience spanning 21 years, I've dedicated my life to
-              unraveling the mysteries of existence and guiding others toward a
-              harmonious and prosperous life.
-            </p>
-            <br />
-            <p>
-              Born and raised in the culturally rich city of Kolkata, West
-              Bengal, my roots are deeply embedded in the spiritual essence of
-              India.
-            </p>
-            <br />
-            <p>
-              From the early days of my childhood, I felt a profound connection
-              to the metaphysical aspects of life, a calling that would shape my
-              destiny.
-            </p>
-            <br />
-            <Link to={"/about-page"}>
-              <button className="text-white bg-black hover:bg-transparent border border-black rounded-sm px-3 py-2 hover:border hover:border-black transition duration-700 ease-in-out hover:text-black">
-                Know More
-              </button>
-            </Link>
-          </div>
-          <div className="w-full md:w-[40%] flex items-center mt-16 sm:mt-8 md:mt-[-50px]">
-            <div className="border-2 border-green-200 rounded-3xl w-[300px] h-auto relative overflow-hidden bg-black/20">
-              <img
-                src={feature6}
-                className="w-full h-auto rounded-3xl"
-                alt=""
-              />
-            </div>
-            <div className="border-2 border-green-200 rounded-3xl w-[300px] h-auto relative overflow-hidden -ml-[220px] -mt-28">
-              <img
-                src={feature6}
-                className="w-full h-auto rounded-3xl"
-                alt=""
-              />
-            </div>
-          </div>
+        <h3 className="font-philosopher text-3xl text-black mb-8 text-center"> About the Cosmic Guide </h3>
+        
+        <h3 className="font-dancing text-2xl leading-9 text-gray-700 mb-8 text-center">Namaskar & Blessed Greetings!</h3>
+        <div className="text-center">
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Welcome to my cosmic realm! I am your spiritual guide through the mysteries of the universe, 
+            a master practitioner in the ancient arts of astrology, crystal healing, numerology, and sacred geometry. 
+            With over 21 years of divine experience, I've dedicated my existence to unveiling the cosmic secrets 
+            that govern our destinies and illuminate the path to spiritual awakening.
+          </p>
+          <p className="text-gray-700 leading-relaxed mb-4">
+            Born under the mystical energies of Mumbai, Maharashtra, my soul has been attuned to the 
+            spiritual vibrations of ancient India since birth. The sacred wisdom of our ancestors flows through 
+            my being, connecting me to the eternal cosmic consciousness.
+          </p>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            From my earliest memories, the metaphysical realm called to me with an irresistible force. 
+            The stars whispered their secrets, crystals revealed their healing powers, and numbers unveiled 
+            their sacred meanings - all preparing me for this divine mission of guiding souls toward enlightenment.
+          </p>
+          <Link to={"/about-page"}>
+            <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-6 py-3 rounded-full font-semibold shadow-lg transform hover:scale-105 transition-all duration-300 border border-purple-400">
+              Discover My Cosmic Journey
+            </button>
+          </Link>
         </div>
       </div>
     </div>

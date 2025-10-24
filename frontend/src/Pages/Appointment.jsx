@@ -1,14 +1,20 @@
 import React, { useState } from "react";
-import axios from "axios";
-import TopNavbar from "../components/TopNavbar";
 import BottomNavbar from "../components/BottomNavbar";
 import Footer from "../components/Footer";
 import banner3 from "../images/sliderImages/slide2.jpg";
-import * as Yup from "yup";
-import logo from "../images/logo/llogo icon-01.png";
 import { LuLoader2 } from "react-icons/lu";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { sendAppointmentEmail } from "../email.js";
 
 const Appointment = () => {
+  const experts = [
+    { name: "Astro Achariya Rajveer Gupta", email: "bhavikasmart15@gmail.com" },
+    { name: "Dr. Priya Sharma", email: "priya.sharma@astro.com" },
+    { name: "Pandit Ramesh Kumar", email: "ramesh.kumar@astro.com" },
+    { name: "Astrologer Meera Devi", email: "meera.devi@astro.com" }
+  ];
+
   const getCurrentTime = () => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
@@ -26,340 +32,117 @@ const Appointment = () => {
     time: getCurrentTime(),
     preferredSlot: "morning",
     modeOfConsultation: "online",
+    expertName: "Astro Achariya Rajveer Gupta",
+    expertEmail: "bhavikasmart15@gmail.com",
   };
 
   const [formData, setFormData] = useState(initialFormValue);
-
   const [loading, setLoading] = useState(false);
+  const currentDate = new Date().toISOString().split("T")[0];
 
-  const [userDataFromPayment, setUserDataFromPayment] = useState(null);
-
+  // ✅ Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const emailRegex = /^[^\s@]+@[^\s@]+\[^\s@]+$/;
+    if (name === "mobileNumber" && !/^\d{0,10}$/.test(value)) return;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-    if (name === "mobileNumber" && !/^\d{0,10}$/.test(value)) {
-      return;
-    }
-
-    if (name === "email" && emailRegex.test(value)) {
-      return;
-    }
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+  // ✅ Expert selection
+  const handleExpertChange = (e) => {
+    const selectedExpert = experts.find(ex => ex.name === e.target.value);
+    setFormData(prev => ({
+      ...prev,
+      expertName: selectedExpert.name,
+      expertEmail: selectedExpert.email
     }));
   };
 
-  const checkoutHandler = async (e, formData) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { firstName, lastName, mobileNumber, address } = formData;
 
-    if (
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !mobileNumber.trim() ||
-      !address.trim()
-    ) {
-      alert("Please fill all the details.");
-      return;
-    }
-    if (mobileNumber.trim().length !== 10) {
-      alert("Please enter 10 digit mobile number ");
-      return;
-    }
-    if (firstName.trim().length < 3) {
-      alert("Please enter your name properly");
-      return;
-    }
-    if (lastName.trim().length < 3) {
-      alert("Please enter your last name properly ");
+    const { firstName, lastName, mobileNumber, address, email } = formData;
+
+    if (!firstName || !lastName || !mobileNumber || !address || !email) {
+      toast.error("Please fill all the required fields.");
       return;
     }
 
     setLoading(true);
 
-    // const options = {
-    //   order_id: order.id,
-    //   prefill: {
-    //     name: `${formData.firstName} ${formData.lastName}`,
-    //     email: `${formData.email}`,
-    //     contact: `${formData.mobileNumber}`,
-    //     address: `${formData.address}`,
-    //   },
-    // };
-
-    // gettingDataFromPlacingOrder(options, order);
-
-    //************************   After completion of the validation process this below code would be uncommented   ************************
-
-    const {
-      data: { key },
-    } = await axios.get(`${import.meta.env.VITE_HOST_URL_ENDPOINT}/api/getkey`);
-
     try {
-      const {
-        data: { order },
-      } = await axios.post(
-        `${import.meta.env.VITE_HOST_URL_ENDPOINT}/api/checkout`,
-        // { price },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const options = {
-        key,
-        // amount: order.price,
-        currency: "INR",
-        name: "Astro website",
-        description: "Test Transaction",
-        image: logo,
-        order_id: order.id,
-        callback_url: `${import.meta.env.VITE_HOST_URL_ENDPOINT
-          }/api/paymentverification`,
-        prefill: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: `${formData.email}`,
-          contact: `${formData.mobileNumber}`,
-          address: `${formData.address}`,
-        },
-        notes: {
-          address: "Astro web pvt. ltd.",
-        },
-        theme: {
-          color: "#003CF0",
-        },
-      };
-      var razor = new window.Razorpay(options);
-      gettingDataFromPlacingOrder(options, order);
-      // ************************** ONCE I WANT TO ADD RAZORPAY IN APPONEMENT LETS UNCOMMENT THIS BELOW ************************
-
-      razor.open();
-
-      // ************************** ONCE I WANT TO ADD RAZORPAY IN APPONEMENT LETS UNCOMMENT THIS ABOVE ************************
+      const result = await sendAppointmentEmail(formData);
+      
+      if (result.success) {
+        toast.success("Appointment request sent successfully! We will contact you soon.");
+        setFormData(initialFormValue);
+      } else {
+        toast.error("Failed to send appointment request. Please try again.");
+      }
     } catch (error) {
-      console.error("Error during checkout:", error.message);
+      console.error("Error submitting appointment:", error);
+      toast.error("Failed to send appointment request. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  //************************   After completion of the validation process this above code would be uncommented   ************************
 
-  const gettingDataFromPlacingOrder = async (allTheData, order) => {
-    try {
-      const razorpay_order_id = order.id;
-      setUserDataFromPayment(razorpay_order_id);
-
-      const dataToSend = {
-        firstName: allTheData.prefill.name.split(" ")[0],
-        lastName: allTheData.prefill.name.split(" ")[1],
-        mobileNumber: allTheData.prefill.contact,
-        email: allTheData.prefill.email,
-        address: allTheData.prefill.address,
-        date: formData.date,
-        time: formData.time,
-        preferredSlot: formData.preferredSlot,
-        modeOfConsultation: formData.modeOfConsultation,
-        razorpay_order_id: razorpay_order_id,
-        currentDate: new Date(),
-        currentTime: getCurrentTime(),
-      };
-
-      const response = await axios.post(
-        `${import.meta.env.VITE_HOST_URL_ENDPOINT}/api/appointment`,
-        dataToSend
-      );
-      console.log(response, "Response getting or not ...");
-      alert(response.data.message);
-    } catch (error) {
-      console.error("Error while adding data to the database:", error);
-    }
-  };
-
-  const currentDate = new Date().toISOString().split("T")[0];
-  //  console.log(currentDate)
   return (
-    <>
-      <section className="bg-gray-100 min-h-screen">
-        <div className="hidden md:block">
-          <TopNavbar />
-        </div>
-        <div className="bg-black h-[70px]">
-          <BottomNavbar className="text-black" />
-        </div>
-        <div className="w-full">
-          <img
-            src={banner3}
-            alt="banner image"
-            className="h-[50vh] object-cover w-full"
-          />
-        </div>
-        <div className="grid md:flex lg:flex m-auto mb-7 font-sans w-[90%] gap-4">
-          <div className="m-auto text-center">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl mt-7 font-semibold mb-4 font-philosopher text-center">
-              Book an Appointment
-            </h2>
-            <h3 className="text-[13px] italic font-sans md:text-[16px] lg:text-[18px] text-gray-500 mb-3">
-              Unlock Solutions, Embrace Serenity.
-            </h3>
-            <div>
-              <p>
-                In years of practicing astrology, I've discovered a profound
-                truth - every problem is a lock with a key. Whether it's delving
-                into horoscopes, tarot, or palmistry, I provide seekers with
-                remedies, unlocking doors to happiness and goals.
-              </p>
-              <p>
-                Life becomes precious, and the lessons learned are cherished for
-                good. Find solutions, feel sorted, and embrace the journey
-                towards a fulfilled life.
-              </p>
-            </div>
-          </div>
-          <div className="px-4 m-auto md:px-0 py-8 max-w-lg mx-auto">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl mt-7 font-semibold mb-4 font-philosopher text-center">
-              Appointment Form
-            </h1>
-            <form
-              action=""
-              onSubmit={(e) => checkoutHandler(e, formData)}
-              className="bg-white font-poppins shadow-md rounded px-3 pt-6 pb-8 mb-4 space-y-4 border border-blue-300"
-            >
-              <input
-                type="text"
-                placeholder={`First Name*`}
-                name="firstName"
-                // required
-                value={formData.firstName}
-                onChange={handleInputChange}
-                autoComplete="off"
-                className="shadow appearance-none border border-blue-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none"
-              />
-              <input
-                type="text"
-                placeholder="Last Name*"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-                autoComplete="off"
-                className="shadow appearance-none border border-blue-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              <input
-                type="number"
-                placeholder="Mobile Number*"
-                name="mobileNumber"
-                value={formData.mobileNumber}
-                onChange={handleInputChange}
-                autoComplete="off"
-                className="shadow appearance-none border rounded border-blue-200 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                autoComplete="off"
-                className="shadow appearance-none border rounded border-blue-200 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              <textarea
-                type="text"
-                placeholder="Full Address*"
-                name="address"
-                rows={4}
-                value={formData.address}
-                onChange={handleInputChange}
-                autoComplete="off"
-                className="shadow appearance-none border rounded border-blue-200 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-              {/* Date & Time selection */}
-              <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="date"
-                  placeholder="Select Date here*"
-                  name="date"
-                  required
-                  value={formData.date}
-                  onChange={handleInputChange}
-                  min={currentDate}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-                <input
-                  type="time"
-                  placeholder="Select Time here*"
-                  name="time"
-                  required
-                  value={formData.time}
-                  onChange={handleInputChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              {/* preferredSlot & modeOfConsultation selection */}
+    <section className="bg-gray-100 min-h-screen pt-16">
+      <BottomNavbar />
+      <div className="w-full">
+        <img src={banner3} alt="banner" className="h-[50vh] object-cover w-full" />
+      </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <select
-                  name="preferredSlot"
-                  value={formData.preferredSlot}
-                  onChange={handleInputChange}
-                  id=""
-                  className="shadow appearance-none border border-blue-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                  <option value="morning">Morning</option>
-                  <option value="afternoon">Afternoon</option>
-                  <option value="evening">Evening</option>
-                </select>
-                <select
-                  name="modeOfConsultation"
-                  value={formData.modeOfConsultation}
-                  onChange={handleInputChange}
-                  id=""
-                  className="shadow appearance-none border border-blue-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
-                </select>
-              </div>
-              <div className="flex items-center justify-center mt-6">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 w-full text-white font-bold py-2 px-4 rounded"
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center w-[130px] m-auto">
-                      <LuLoader2 className="animate-spin mr-2" /> Loading...
-                    </span>
-                  ) : (
-                    "Book Appointment"
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
+      <div className="w-[90%] mx-auto py-8 grid md:flex gap-6">
+        {/* Left Section */}
+        <div className="flex-1 text-center md:text-left">
+          <h2 className="text-3xl font-semibold font-philosopher mb-2">
+            Book an Appointment
+          </h2>
+          <p className="text-gray-600 italic mb-4">Unlock Solutions, Embrace Serenity.</p>
+          <p>Every problem is a lock with a key. Whether it's astrology, tarot, or palmistry, I help you unlock happiness.</p>
         </div>
-        <div className=" w-[60%] m-auto px-3 mb-7 text-center">
-          <p>
-            In life's journey, our paths intertwine, and our actions can touch
-            lives.
-          </p>
-          <p>
-            A warm, service-oriented touch transforms the world into a happier
-            place.
-          </p>
-          <p>
-            As you reach for my knowledge, it's not just about comfort; it's
-            about doing justice to the essence of life—making it meaningful and
-            impactful.
-          </p>
-          <div className="text-[13px] italic font-sans md:text-[16px] lg:text-[18px] text-gray-500 mb-3 mt-3">
-            - Astro Achariya Debdutta
-          </div>
+
+        {/* Right Section (Form) */}
+        <div className="flex-1 bg-white p-6 rounded-lg shadow-lg border border-blue-300">
+          <h2 className="text-2xl font-semibold text-center mb-4">Appointment Form</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input name="firstName" placeholder="First Name*" value={formData.firstName} onChange={handleInputChange} className="input" />
+            <input name="lastName" placeholder="Last Name*" value={formData.lastName} onChange={handleInputChange} className="input" />
+            <input name="mobileNumber" placeholder="Mobile Number*" value={formData.mobileNumber} onChange={handleInputChange} className="input" />
+            <input name="email" placeholder="Email*" value={formData.email} onChange={handleInputChange} className="input" />
+            <textarea name="address" placeholder="Address*" value={formData.address} onChange={handleInputChange} rows="3" className="input"></textarea>
+
+            <div className="grid grid-cols-2 gap-4">
+              <input type="date" name="date" min={currentDate} value={formData.date} onChange={handleInputChange} className="input" />
+              <input type="time" name="time" value={formData.time} onChange={handleInputChange} className="input" />
+            </div>
+
+            <select name="expertName" value={formData.expertName} onChange={handleExpertChange} className="input">
+              {experts.map(ex => <option key={ex.email}>{ex.name}</option>)}
+            </select>
+
+            <div className="grid grid-cols-2 gap-4">
+              <select name="preferredSlot" value={formData.preferredSlot} onChange={handleInputChange} className="input">
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="evening">Evening</option>
+              </select>
+              <select name="modeOfConsultation" value={formData.modeOfConsultation} onChange={handleInputChange} className="input">
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+              </select>
+            </div>
+
+            <button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full">
+              {loading ? <span className="flex justify-center"><LuLoader2 className="animate-spin mr-2" />Processing...</span> : "Book Appointment"}
+            </button>
+          </form>
         </div>
-        <Footer />
-      </section>
-    </>
+      </div>
+
+      <Footer />
+    </section>
   );
 };
 

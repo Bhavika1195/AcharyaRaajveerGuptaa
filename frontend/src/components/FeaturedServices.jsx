@@ -18,44 +18,44 @@ const FeaturedServices = () => {
     {
       image: feature1,
       navigatePath: "astro-birth-chart-reformation",
-      HeadText: "Astro Birth Chart Reformation",
+      HeadText: " Cosmic Birth Chart Reading",
       paragraph:
-        "Discover the mysteries of your life's path with a profound examination of your birth chart.",
+        " Unveil the celestial blueprint of your soul's journey through the stars and planets ",
     },
     {
       image: feature2,
       navigatePath: "astro-vastu-consultancy",
-      HeadText: "Astro Vastu Consultancy",
+      HeadText: " Sacred Space Harmonization",
       paragraph:
-        "Dance through life's energies—immerse yourself in the vibrant hues of happiness.",
+        " Align your living space with cosmic energies for prosperity and spiritual growth ",
     },
     {
       image: feature3,
       navigatePath: "life-coach-and-success-guru",
-      HeadText: "Life Coach and Success Guru",
+      HeadText: " Spiritual Life Guidance",
       paragraph:
-        "Elevate your essence with a coaching journey: sculpt your style, infuse substance, and claim the trio of Power, Peace, and Prosperity.",
+        " Transform your destiny through ancient wisdom and unlock your divine potential ",
     },
     {
       image: feature4,
       navigatePath: "palmistry",
-      HeadText: "Palmistry",
+      HeadText: " Mystical Palm Reading",
       paragraph:
-        "Trace the echoes of your destiny in the lines of your hands; let the journey begin towards a future woven with blissful possibilities.",
+        " Decode the sacred lines of your hands to reveal your soul's deepest secrets and future path ",
     },
     {
       image: feature5,
       navigatePath: "numerology",
-      HeadText: "Numerology",
+      HeadText: " Sacred Number Divination",
       paragraph:
-        "When questions linger, Numerology brings answers, leading you from uncertainty to tranquillity.",
+        " Unlock the mystical power of numbers to illuminate your life's purpose and destiny ",
     },
     {
       image: feature6,
       navigatePath: "face-reading",
-      HeadText: "Face Reading",
+      HeadText: " Ancient Face Divination",
       paragraph:
-        "Master face reading for heightened decision-making wisdom. Unveil allure and insist on your success with serene confidence.",
+        " Read the cosmic map written upon your face to unveil hidden truths and future possibilities ",
     },
   ];
 
@@ -69,12 +69,15 @@ const FeaturedServices = () => {
 
   return (
     <>
-      <div className=" absolute mt-[1620px] md:mt-[1200px] lg:mt-[1160px] bg-white w-full">
+      <div className=" absolute mt-[1800px] md:mt-[1400px] lg:mt-[1300px] bg-white w-full">
         <About />
         <div>
           <h1 className="text-center text-2xl md:text-3xl lg:text-4xl m-3 font-philosopher mt-[800px] md:mt-[300px] lg:mt-[150px] mb-5">
-            Featured Services
+             Mystical Services 
           </h1>
+          <p className="text-center text-lg text-gray-600 mb-8">
+             Unlock the secrets of the universe through ancient wisdom 
+          </p>
         </div>
 
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 text-center w-[90%] m-auto">

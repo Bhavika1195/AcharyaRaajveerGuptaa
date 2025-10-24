@@ -5,9 +5,9 @@ import {
   BiLogoLinkedin,
 } from "react-icons/bi";
 import { TfiYoutube } from "react-icons/tfi";
-import { AiOutlineTwitter } from "react-icons/ai";
+import { AiOutlineTwitter, AiOutlineMail } from "react-icons/ai";
 import { FaXTwitter } from "react-icons/fa6";
-import { BsYoutube } from "react-icons/bs";
+import { BsYoutube, BsTelephoneFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -115,10 +115,15 @@ const Footer = () => {
             Get In Touch
           </h2>
           <div className="text-[16px] ml-2">
-            <p>Kolkata, India</p>
-            <p>Email: support@astro.com</p>
-            <p>Phone: +91 XXXXX XXXXX</p>
-            <p>Phone: +91 XXXXX XXXXX</p>
+            <p>Mumbai, India</p>
+            <div className="flex items-center mb-2">
+              <AiOutlineMail className="mr-2" />
+              <p>Rajveer@astrovastu9.com</p>
+            </div>
+            <div className="flex items-center mb-2">
+              <BsTelephoneFill className="mr-2" />
+              <p>+91 98333 33077</p>
+            </div>
           </div>
           {/* Social icons div here */}
           <div className="flex justify-between md:ml-2 lg:ml-2 w-[250px] m-auto mt-[70px]">
@@ -144,7 +149,7 @@ const Footer = () => {
         <hr className=" w-[90%] border-s-violet-400 border-gray-300 my-10 mb-2 m-auto" />
       </div>
       <div className="m-auto text-center text-white pb-2">
-        © Copyright 2023, All Rights Reserved,❤️ by Samsur
+        © Copyright 2023, All Rights Reserved, by Bhavika Setpal
       </div>
     </div>
   );

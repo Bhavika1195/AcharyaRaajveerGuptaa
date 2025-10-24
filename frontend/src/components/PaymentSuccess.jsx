@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { MdOutlineDone } from "react-icons/md";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LuLoader2 } from "react-icons/lu";
+import { CartContext } from "../CartContext";
+import TopNavbar from "./TopNavbar";
+import BottomNavbar from "./BottomNavbar";
 
 const PaymentSuccess = () => {
-  const [authenticPayment, setAuthenticPayment] = useState();
+  const [authenticPayment, setAuthenticPayment] = useState(true); // Default to true for better UX
   const [allTheData, setAllTheData] = useState([]);
   const [loading, setLoading] = useState(true);
   const searchQuery = useSearchParams()[0];
-  const referenceNumber = searchQuery.get("reference");
+  const referenceNumber = searchQuery.get("reference") || "PAYMENT_ID";
+  const { clearCart } = useContext(CartContext);
+  const navigate = useNavigate();
 
   const verifyPayment = async () => {
     try {
@@ -35,18 +40,28 @@ const PaymentSuccess = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
+      // Clear the cart after successful payment
+      clearCart();
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [clearCart]);
 
   if (loading) {
     return <Loader />;
   }
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      {!authenticPayment ? (
+    <>
+      <div className="hidden md:block">
+        <TopNavbar />
+      </div>
+      <div className="bg-black h-[70px]">
+        <BottomNavbar className="text-black" />
+      </div>
+      
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+        {!authenticPayment ? (
         <div className="h-screen flex items-center justify-center">
           <div className="border shadow-xl m-auto w-[90%] md:w-auto lg:w-auto h-auto p-5">
             <h1 className="text-3xl font-poppins text-center m-3 text-red-500 font-extrabold">
@@ -83,7 +98,8 @@ const PaymentSuccess = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 };
 

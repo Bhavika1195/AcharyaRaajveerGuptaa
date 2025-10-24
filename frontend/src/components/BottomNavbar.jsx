@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FiMenu } from "react-icons/fi";
 import { AiOutlineClose, AiOutlineHome } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { FaShoppingCart } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../images/logo/astro achariya logo-01.png";
 import mobilelogo from "../images/logo/mobile-logo1.png";
 import mobilelogo2 from "../images/logo/mobile-logo2.png";
+import { CartContext } from "../CartContext";
 
 const BottomNavbar = () => {
   const [navbar, setNavbar] = useState(false);
   const [sticky, setSticky] = useState(false);
   const [stickyLogo, setStickyLogo] = useState(false);
+  const { cartCount } = useContext(CartContext);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,38 +58,22 @@ const BottomNavbar = () => {
     <div className="relative font-poppins">
       {/* navbar for mobile and tab sizes */}
       <div
-        className={`flex text-2xl justify-between z-10 m-auto w-full h-[65px] items-center px-6  ${sticky
-            ? "fixed top-0 bg-black transition-all duration-700"
-            : " absolute top-0 transition-all duration-700"
-          }`}
+        className="flex text-2xl justify-between z-50 m-auto w-full h-[65px] items-center px-6 fixed top-0 bg-gradient-to-r from-purple-900 to-indigo-900 transition-all duration-700"
       >
         {/* some color code of navbar  #1AA7EC  #1E2F97  #00468B #00588b #4267B2*/}
-        <div className="">
-          {stickyLogo ? (
-            <div className="flex justify-between items-center">
-              <img
-                src={mobilelogo}
-                alt="logo"
-                onClick={() => navigate("/")}
-                className="w-[50px] md:w-[70px] lg:w-[70px] cursor-pointer"
-              />
-              <img
-                src={mobilelogo2}
-                onClick={() => navigate("/")}
-                className="w-[100px] md:w-[130px] lg:w-[200px] cursor-pointer"
-                alt="logo"
-              />
-            </div>
-          ) : (
-            <div className="">
-              <img
-                src={logo}
-                onClick={() => navigate("/")}
-                className="w-[100px] mt-[6%] lg:mt-[20%] md:w-[200px] lg:w-[180px] cursor-pointer"
-                alt=""
-              />
-            </div>
-          )}
+        <div className="flex items-center">
+          <img
+            src={mobilelogo}
+            alt="logo"
+            onClick={() => navigate("/")}
+            className="w-[50px] md:w-[70px] lg:w-[70px] cursor-pointer"
+          />
+          <img
+            src={mobilelogo2}
+            alt="astrology logo"
+            onClick={() => navigate("/")}
+            className="w-[100px] md:w-[130px] lg:w-[200px] cursor-pointer ml-2"
+          />
         </div>
         <button
           className="md:hidden cursor-pointer px-1 py-1"
@@ -106,8 +93,11 @@ const BottomNavbar = () => {
         {/* Conditional navbar for large screens */}
         <div className="hidden md:flex">
           <h3
-            onClick={() => navigate("/")}
-            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 ${location.pathname === "/" ? "font-bold text-white" : "text-white"
+            onClick={() => {
+              setNavbar(false);
+              navigate("/");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/" ? "font-bold text-white" : "text-white"
               }`}
           >
             Home
@@ -116,8 +106,11 @@ const BottomNavbar = () => {
             )}
           </h3>
           <h3
-            onClick={() => navigate("/about-page")}
-            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 ${location.pathname === "/about-page"
+            onClick={() => {
+              setNavbar(false);
+              navigate("/about-page");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/about-page"
                 ? "font-bold text-white"
                 : "text-white"
               }`}
@@ -142,8 +135,11 @@ const BottomNavbar = () => {
           </h3> */}
 
           <h3
-            onClick={() => navigate("/services")}
-            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 ${location.pathname === "/services"
+            onClick={() => {
+              setNavbar(false);
+              navigate("/services");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/services"
                 ? "font-bold text-white"
                 : "text-white"
               }`}
@@ -153,6 +149,46 @@ const BottomNavbar = () => {
               <hr className="border-b-2 border-white mt-[1px]" />
             )}
           </h3>
+          <h3
+            onClick={() => {
+              setNavbar(false);
+              navigate("/products");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/products"
+                ? "font-bold text-white"
+                : "text-white"
+              }`}
+          >
+            Products
+            {location.pathname === "/products" && (
+              <hr className="border-b-2 border-white mt-[1px]" />
+            )}
+          </h3>
+          <div className="relative">
+            <h3
+              onClick={() => {
+                setNavbar(false);
+                navigate("/cart");
+              }}
+              className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/cart"
+                  ? "font-bold text-white"
+                  : "text-white"
+                }`}
+            >
+              <div className="flex items-center">
+                <FaShoppingCart className="mr-1" />
+                <span>Cart</span>
+              </div>
+              {location.pathname === "/cart" && (
+                <hr className="border-b-2 border-white mt-[1px]" />
+              )}
+            </h3>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </div>
           {/* <h3
             onClick={() => navigate("/events")}
             className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 ${
@@ -167,8 +203,11 @@ const BottomNavbar = () => {
             )}
           </h3> */}
           <h3
-            onClick={() => navigate("/appointment")}
-            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 ${location.pathname === "/appointment"
+            onClick={() => {
+              setNavbar(false);
+              navigate("/appointment");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/appointment"
                 ? "font-bold text-white"
                 : "text-white"
               }`}
@@ -179,8 +218,11 @@ const BottomNavbar = () => {
             )}
           </h3>
           <h3
-            onClick={() => navigate("/contact")}
-            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 ${location.pathname === "/contact"
+            onClick={() => {
+              setNavbar(false);
+              navigate("/contact");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/contact"
                 ? "font-bold text-white"
                 : "text-white"
               }`}
@@ -190,15 +232,54 @@ const BottomNavbar = () => {
               <hr className="border-b-2 border-white mt-[1px]" />
             )}
           </h3>
-
-          {/* <div>
-            <h3
-              className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 text-white`}
-              onClick={handleLinkClickToGoToBlogPage}
-            >
-              Blogs
-            </h3>
-          </div> */}
+          
+          <h3
+            onClick={() => {
+              setNavbar(false);
+              navigate("/blogs");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/blogs" || location.pathname.startsWith("/blogs/")
+                ? "font-bold text-white"
+                : "text-white"
+              }`}
+          >
+            Blogs
+            {(location.pathname === "/blogs" || location.pathname.startsWith("/blogs/")) && (
+              <hr className="border-b-2 border-white mt-[1px]" />
+            )}
+          </h3>
+          
+          <h3
+            onClick={() => {
+              setNavbar(false);
+              navigate("/horoscope");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/horoscope" || location.pathname.startsWith("/horoscope/")
+                ? "font-bold text-white"
+                : "text-white"
+              }`}
+          >
+            Horoscope
+            {(location.pathname === "/horoscope" || location.pathname.startsWith("/horoscope/")) && (
+              <hr className="border-b-2 border-white mt-[1px]" />
+            )}
+          </h3>
+          
+          <h3
+            onClick={() => {
+              setNavbar(false);
+              navigate("/questions");
+            }}
+            className={`cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 ${location.pathname === "/questions" || location.pathname.startsWith("/questions/")
+                ? "font-bold text-white"
+                : "text-white"
+              }`}
+          >
+            Q&A
+            {(location.pathname === "/questions" || location.pathname.startsWith("/questions/")) && (
+              <hr className="border-b-2 border-white mt-[1px]" />
+            )}
+          </h3>
         </div>
 
         {/* Mobile responsive navbar for medium and small screens */}
@@ -218,13 +299,19 @@ const BottomNavbar = () => {
 
           <div className="text-[16px] mt-12 text-center">
             <h3
-              onClick={() => navigate("/")}
+              onClick={() => {
+                setNavbar(false);
+                navigate("/");
+              }}
               className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
             >
               Home
             </h3>
             <h3
-              onClick={() => navigate("/about-page")}
+              onClick={() => {
+                setNavbar(false);
+                navigate("/about-page");
+              }}
               className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
             >
               About
@@ -236,11 +323,39 @@ const BottomNavbar = () => {
               Awards
             </h3> */}
             <h3
-              onClick={() => navigate("/services")}
+              onClick={() => {
+                setNavbar(false);
+                navigate("/services");
+              }}
               className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
             >
               Services
             </h3>
+            <h3
+              onClick={() => {
+                setNavbar(false);
+                navigate("/products");
+              }}
+              className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
+            >
+              Products
+            </h3>
+            <div className="relative inline-block">
+              <h3
+                onClick={() => {
+                  setNavbar(false);
+                  navigate("/cart");
+                }}
+                className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300 flex items-center justify-center"
+              >
+                <FaShoppingCart className="mr-1" /> Cart
+              </h3>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </div>
             {/* <h3
               onClick={() => navigate("/events")}
               className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
@@ -248,25 +363,50 @@ const BottomNavbar = () => {
               Events
             </h3> */}
             <h3
-              onClick={() => navigate("/appointment")}
+              onClick={() => {
+                setNavbar(false);
+                navigate("/appointment");
+              }}
               className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
             >
               Appointment
             </h3>
             <h3
-              onClick={() => navigate("/contact")}
+              onClick={() => {
+                setNavbar(false);
+                navigate("/contact");
+              }}
               className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
             >
               Contact
             </h3>
-            {/* <div>
-              <h3
-                onClick={handleLinkClickToGoToBlogPage}
-                className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
-              >
-                Blogs
-              </h3>
-            </div> */}
+            <h3
+              onClick={() => {
+                setNavbar(false);
+                navigate("/blogs");
+              }}
+              className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
+            >
+              Blogs
+            </h3>
+            <h3
+              onClick={() => {
+                setNavbar(false);
+                navigate("/horoscope");
+              }}
+              className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
+            >
+              Horoscope
+            </h3>
+            <h3
+              onClick={() => {
+                setNavbar(false);
+                navigate("/questions");
+              }}
+              className="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300"
+            >
+              Q&A
+            </h3>
           </div>
         </div>
       </div>

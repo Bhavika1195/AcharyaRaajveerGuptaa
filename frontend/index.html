@@ -1,42 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap"
-      rel="stylesheet"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achariya Debdutta - Astrology • Numerology • Vastu</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Open+Sans&family=Philosopher:ital@0;1&family=Poppins:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="flex text-2xl justify-between z-50 m-auto w-full h-[65px] items-center px-6 fixed top-0 bg-gradient-to-r from-purple-900 to-indigo-900 transition-all duration-700">
+        <div class="flex items-center">
+            <img src="src/images/logo/mobile-logo1.png" alt="logo" onclick="navigateTo('/')" class="w-[50px] md:w-[70px] lg:w-[70px] cursor-pointer">
+            <img src="src/images/logo/mobile-logo2.png" alt="astrology logo" onclick="navigateTo('/')" class="w-[100px] md:w-[130px] lg:w-[200px] cursor-pointer ml-2">
+        </div>
+        
+        <button id="mobile-menu-btn" class="md:hidden cursor-pointer px-1 py-1">
+            <i class="fas fa-bars text-white text-2xl"></i>
+        </button>
+        
+        <div class="hidden md:flex">
+            <h3 onclick="navigateTo('/')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">Home</h3>
+            <h3 onclick="navigateTo('/about-page')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">About</h3>
+            <h3 onclick="navigateTo('/services')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">Services</h3>
+            <h3 onclick="navigateTo('/products')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">Products</h3>
+            <div class="relative">
+                <h3 onclick="navigateTo('/cart')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">
+                    <div class="flex items-center">
+                        <i class="fas fa-shopping-cart mr-1"></i>
+                        <span>Cart</span>
+                    </div>
+                </h3>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+            </div>
+            <h3 onclick="navigateTo('/appointment')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">Appointment</h3>
+            <h3 onclick="navigateTo('/contact')" class="nav-item cursor-pointer mt-2 mx-2 text-[16px] transition duration-300 hover:text-yellow-300 text-white">Contact</h3>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Philosopher&display=swap"
-      rel="stylesheet"
-    />
+        </div>
+        
+        <div id="mobile-menu" class="fixed top-0 right-0 w-full h-auto bg-white z-10 transition-transform transform translate-y-full duration-300 ease-in hidden">
+            <i class="fas fa-times absolute right-4 top-4 cursor-pointer text-2xl" onclick="toggleMobileMenu()"></i>
+            <div class="text-[16px] mt-12 text-center">
+                <h3 onclick="navigateTo('/')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">Home</h3>
+                <h3 onclick="navigateTo('/about-page')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">About</h3>
+                <h3 onclick="navigateTo('/services')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">Services</h3>
+                <h3 onclick="navigateTo('/products')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">Products</h3>
+                <h3 onclick="navigateTo('/cart')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">Cart</h3>
+                <h3 onclick="navigateTo('/appointment')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">Appointment</h3>
+                <h3 onclick="navigateTo('/contact')" class="cursor-pointer hover:bg-blue-500 mt-2 hover:text-white transition duration-300">Contact</h3>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Philosopher:ital@0;1&family=Poppins:wght@200&display=swap"
-      rel="stylesheet"
-    />
+            </div>
+        </div>
+    </nav>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&family=Open+Sans&family=Philosopher:ital@0;1&family=Poppins:wght@200&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Main Content -->
+    <main id="app">
+        <!-- Content will be dynamically loaded here -->
+    </main>
 
-    <title>Dev Website</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // === EmailJS Setup ===
+        // Replace these with your actual EmailJS dashboard values:
+        // 1. Go to https://dashboard.emailjs.com/admin
+        // 2. Copy your Service ID and Template IDs
+        // 3. Paste them below
+        window.EMAILJS_PUBLIC_KEY = 'FUOpDfmFkzeMAu-Xz'; // Your public key
+    window.EMAILJS_SERVICE_ID = 'service_1jvj89d'; // <-- Replace with your real Service ID
+    window.EMAILJS_TEMPLATE_CONTACT_ADMIN = 'template_8ius8u1'; // <-- Updated to your real template ID
+        window.EMAILJS_TEMPLATE_CONTACT_REPLY = 'template_contact_reply'; // <-- Replace with your real template ID
+        window.EMAILJS_TEMPLATE_APPOINTMENT_ADMIN = 'template_p7m1u6t'; // <-- Replace with your real template ID
+        window.EMAILJS_TEMPLATE_APPOINTMENT_REPLY = 'template_appointment_reply'; // <-- Replace with your real template ID
+        window.EMAILJS_TEMPLATE_ORDER_ADMIN = 'template_8ius8u1'; // <-- Replace with your real template ID
+        window.EMAILJS_TEMPLATE_ORDER_REPLY = 'template_order_reply'; // <-- Replace with your real template ID
+
+        // === Razorpay Setup ===
+        window.RAZORPAY_KEY = 'rzp_test_RHvg8lHcc6xNXJ'; // Replace with your real Razorpay key
+
+        // Initialize EmailJS
+        if (window.emailjs) {
+            try {
+                emailjs.init(window.EMAILJS_PUBLIC_KEY);
+                console.log('EmailJS initialized');
+            } catch (e) {
+                console.error('EmailJS init error', e);
+            }
+        }
+    </script>
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg w-[90%] max-w-md p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Checkout Details</h3>
+                <button id="checkout-close" class="text-gray-600">✕</button>
+            </div>
+            <form id="checkout-form" class="space-y-3">
+                <div>
+                    <label class="block text-sm">Full name</label>
+                    <input id="checkout-name" name="name" type="text" required class="w-full border px-3 py-2 rounded" />
+                </div>
+                <div>
+                    <label class="block text-sm">Email</label>
+                    <input id="checkout-email" name="email" type="email" required class="w-full border px-3 py-2 rounded" />
+                </div>
+                <div>
+                    <label class="block text-sm">Phone</label>
+                    <input id="checkout-phone" name="phone" type="tel" class="w-full border px-3 py-2 rounded" />
+                </div>
+                <div>
+                    <label class="block text-sm">Address</label>
+                    <textarea id="checkout-address" name="address" rows="3" required class="w-full border px-3 py-2 rounded"></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-sm">Total: <span id="checkout-total">₹0</span></div>
+                    <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded">Pay Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="products.js"></script>
+    <script src="pages.js"></script>
+    <script src="script.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  </body>
+</body>
 </html>

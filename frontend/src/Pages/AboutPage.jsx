@@ -1,5 +1,5 @@
 import React from "react";
-import TopNavbar from "../components/TopNavbar";
+
 import BottomNavbar from "../components/BottomNavbar";
 import Footer from "../components/Footer";
 import feature6 from "../images/alldebdatta-images/feature3.jpg";
@@ -8,13 +8,8 @@ import { Link } from "react-router-dom";
 const AboutPage = () => {
   return (
     <>
-      <div className="hidden md:block">
-        <TopNavbar />
-      </div>
-      <div className="bg-black h-[70px]">
-        <BottomNavbar className="text-black" />
-      </div>
-      <div className="  bg-white absolute w-full">
+      <BottomNavbar />
+      <div className="bg-white absolute w-full pt-16">
         <div className="mt-10 pb-10 px-8 ">
           <h3 className="font-philosopher text-xl pl-3 font-bold">About Me</h3>
           <h3 className="font-dancing text-[20px] leading-9 pl-3 ">
@@ -25,7 +20,7 @@ const AboutPage = () => {
             <div className=" w-full md:w-[50%] px-3 sm:mb-10 text-popp">
               <p>
                 As I extend my warm greetings, I invite you to delve into the
-                tapestry of my life's journey. My name is Achariya Debdutta, a
+                tapestry of my life's journey. My name is Achariya Rajveer Gupta, a
                 seasoned professional in the realms of astrology, vastu
                 consultancy, numerology, success coaching, and authorship. With
                 an enriching experience spanning 21 years, I've dedicated my
@@ -34,7 +29,7 @@ const AboutPage = () => {
               </p>
               <br />
               <p>
-                Born and raised in the culturally rich city of Kolkata, West
+                Born and raised in the culturally rich city of Mumbai, West
                 Bengal, my roots are deeply embedded in the spiritual essence of
                 India.
               </p>
@@ -46,15 +41,8 @@ const AboutPage = () => {
               </p>
               <br />
             </div>
-            <div className="w-full md:w-[40%] flex items-center mt-16 sm:mt-8 md:mt-[-50px]">
+            <div className="w-full md:w-[40%] flex items-center justify-center mt-16 sm:mt-8 md:mt-[-50px]">
               <div className="border-2 border-green-200 rounded-3xl w-[300px] h-auto relative overflow-hidden bg-black/20">
-                <img
-                  src={feature6}
-                  className="w-full h-auto rounded-3xl"
-                  alt=""
-                />
-              </div>
-              <div className="border-2 border-green-200 rounded-3xl w-[300px] h-auto relative overflow-hidden -ml-[220px] -mt-28">
                 <img
                   src={feature6}
                   className="w-full h-auto rounded-3xl"
@@ -66,7 +54,7 @@ const AboutPage = () => {
         </div>
         <div className=" pb-10 px-10 m-auto">
           <p className=" text-gray-700 leading-relaxed">
-            In the vibrant streets of Kolkata, amidst the hustle and bustle, I
+            In the vibrant streets of Mumbai, amidst the hustle and bustle, I
             discovered my spiritual inclination. The diverse experiences and the
             cultural mosaic of the city fuelled my curiosity, leading me to
             explore the intricacies of understanding the vibes of people and
@@ -102,7 +90,7 @@ const AboutPage = () => {
           </p>{" "}
           <br />
           <h3 className="font-sans italic font-bold text-xl">
-            - Astro Achariya Debdutta
+            - Astro Achariya Rajveer Gupta
           </h3>
         </div>
         {/* Mission and vision starts here  */}

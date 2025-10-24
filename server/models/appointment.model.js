@@ -39,17 +39,28 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["online", "offline"],
       required: true,
     },
+    expertName: {
+      type: String,
+      required: true,
+    },
+    expertEmail: {
+      type: String,
+      required: true,
+    },
     razorpay_order_id: {
       type: String,
-      // required: true,
+    },
+    razorpay_payment_id: {
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "confirmed", "cancelled"],
+      default: "pending",
     },
     currentDate: {
       type: Date,
       default: Date.now,
-    },
-    currentTime: {
-      type: String,
-      default: new Date().toLocaleTimeString(),
     },
   },
   {
