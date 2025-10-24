@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-
+require('dotenv').config();
 // Load .env for local development (SMTP_USER, SMTP_PASS, SMTP_HOST, SMTP_PORT)
 dotenv.config();
 
