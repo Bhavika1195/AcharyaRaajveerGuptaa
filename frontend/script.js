@@ -1048,13 +1048,25 @@ function showServiceDetail(serviceType) {
 }
 
 // Helper to determine API base URL for local development
-function getApiUrl(path) {
-    try {
-        const loc = window.location;
-        if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
+//function getApiUrl(path) {
+//   try {
+//      const loc = window.location;
+//        if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
             // local dev: talk to local server on 3002 (fallback port when 3001 is in use)
-            return `http://localhost:3002${path}`;
-        }
+//    return `http://localhost:3002${path}`;
+//        }
+//  function getApiUrl(path) {
+//    try {
+//        const loc = window.location;
+//        if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
+//            return `https://acharyaraajveerguptaa-7.onrender.com${path}`;
+//        }
+    function getApiUrl(path) {
+    const baseUrl = import.meta.env.VITE_HOST_URL_ENDPOINT || 'https://acharyaraajveerguptaa-7.onrender.com';
+    return `${baseUrl}${path}`;
+}
+
+        
     } catch (e) {
         // ignore
     }
