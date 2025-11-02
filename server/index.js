@@ -13,15 +13,8 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.VITE_MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
-
-  app.use('/api/products', productRoutes);
+app.use('/api/products', productRoutes);
 app.use('/api/payment', paymentRoutes);
-
 
 connectDB();
 
@@ -30,9 +23,10 @@ export const instance = new Razorpay({
   key_secret: '8AVjUq2ZJYpODN7NE1UNJrcH',
 });
 
-console.log("RAZORPAY_KEY_ID:", instance.key_id);
-console.log("RAZORPAY_KEY_SECRET:", instance.key_secret);
+console.log("RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID);
+console.log("RAZORPAY_KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET ? '***' : 'NOT SET');
 
-app.listen(process.env.VITE_APP_PORT, () => {
-  console.log(`App is running on port ${process.env.VITE_APP_PORT}`);
+const PORT = process.env.PORT || process.env.APP_PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`App is running on port ${PORT}`);
 });
